@@ -637,7 +637,7 @@ class SmartIrLearnPanel extends HTMLElement {
     this._renderLearnRemote(item);
     this._$('learnInstructions').textContent = item.status === 'done'
       ? 'Already learned ✅ — you can re-learn if needed.'
-      : `Set your AC remote to:\n${item.label}\nThen click "Learn this code" and press the button on your remote.`;
+      : `Click "Learn this code" Then set your AC remote to:\n${item.label}\n.`;
     this._$('learnActions').style.display    = '';
     this._$('learnWaiting').style.display    = 'none';
     this._$('learnSuccess').style.display    = 'none';
