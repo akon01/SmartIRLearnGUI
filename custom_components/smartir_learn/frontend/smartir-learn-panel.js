@@ -304,6 +304,7 @@ const _HTML = `
           <button class="btn primary large" id="btnLearn">📡 Learn this code</button>
           <button class="btn ghost" id="btnSkip">Skip</button>
           <button class="btn ghost" id="btnRedo" style="display:none">Re-learn</button>
+          <button class="btn ghost" id="btnTest" style="display:none">▶ Test</button>
         </div>
         <div class="learn-waiting" id="learnWaiting" style="display:none">
           <div class="spinner"></div>
@@ -642,6 +643,7 @@ class SmartIrLearnPanel extends HTMLElement {
     this._$('learnWaiting').style.display    = 'none';
     this._$('learnSuccess').style.display    = 'none';
     this._$('btnRedo').style.display         = item.status === 'done' ? '' : 'none';
+    this._$('btnTest').style.display         = item.status === 'done' ? '' : 'none';
   }
 
   _renderLearnRemote(item) {
@@ -692,6 +694,9 @@ class SmartIrLearnPanel extends HTMLElement {
       this._$('learnWaiting').style.display  = 'none';
       this._$('learnSuccess').style.display  = '';
       this._$('learnSuccessMsg').textContent = `Code captured! (${code.substring(0, 24)}…)`;
+      // also make Test available from the actions row after next navigation
+      this._$('btnTest').style.display = '';
+      this._$('btnRedo').style.display = '';
     } catch (e) {
       if (cancelled) return;
       this._$('learnWaiting').style.display = 'none';
@@ -706,6 +711,27 @@ class SmartIrLearnPanel extends HTMLElement {
     if (this._st.cancelLearn) this._st.cancelLearn();
     this._$('learnWaiting').style.display = 'none';
     this._$('learnActions').style.display = '';
+  }
+
+  async _testCurrentCode() {
+    const item = this._st.queue[this._st.currentIdx];
+    if (!item) return;
+    const code = item.mode === null
+      ? this._st.codes['off']
+      : this._st.codes?.[item.mode]?.[item.fan]?.[String(item.temp)];
+    if (!code) { alert('No code learned for this command yet.'); return; }
+    const btn = this._$('btnTest');
+    btn.textContent = '⏳ Sending…';
+    btn.disabled = true;
+    try {
+      await this._sendCode(code);
+      btn.textContent = '✅ Sent!';
+      setTimeout(() => { btn.textContent = '▶ Test'; btn.disabled = false; }, 1500);
+    } catch (e) {
+      btn.textContent = '❌ Error';
+      btn.disabled = false;
+      alert('Send failed: ' + e.message);
+    }
   }
 
   _skipCurrent() {
@@ -833,6 +859,7 @@ class SmartIrLearnPanel extends HTMLElement {
     // Step 2
     this._$('btnLearn').addEventListener('click',       () => this._startLearn());
     this._$('btnRedo').addEventListener('click',        () => this._startLearn());
+    this._$('btnTest').addEventListener('click',        () => this._testCurrentCode());
     this._$('btnSkip').addEventListener('click',        () => this._skipCurrent());
     this._$('btnCancelLearn').addEventListener('click', () => this._cancelLearn());
     this._$('btnLearnAgain').addEventListener('click',  () => this._startLearn());
