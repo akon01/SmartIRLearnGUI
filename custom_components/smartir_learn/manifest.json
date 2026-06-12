@@ -1,0 +1,10 @@
+{
+  "domain": "smartir_learn",
+  "name": "SmartIR Learn",
+  "version": "1.0.0",
+  "documentation": "https://github.com/smartHomeHub/SmartIR",
+  "dependencies": ["mqtt", "frontend"],
+  "codeowners": [],
+  "requirements": [],
+  "iot_class": "local_push"
+}
