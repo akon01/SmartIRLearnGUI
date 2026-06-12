@@ -304,7 +304,6 @@ const _HTML = `
           <button class="btn primary large" id="btnLearn">📡 Learn this code</button>
           <button class="btn ghost" id="btnSkip">Skip</button>
           <button class="btn ghost" id="btnRedo" style="display:none">Re-learn</button>
-          <button class="btn ghost" id="btnTest" style="display:none">▶ Test</button>
         </div>
         <div class="learn-waiting" id="learnWaiting" style="display:none">
           <div class="spinner"></div>
@@ -314,6 +313,7 @@ const _HTML = `
         <div class="learn-success" id="learnSuccess" style="display:none">
           <div class="success-icon">✅</div>
           <p id="learnSuccessMsg">Code captured!</p>
+          <button class="btn ghost" id="btnTest" style="display:none">▶ Test</button>
           <button class="btn ghost small" id="btnLearnAgain">Re-learn</button>
           <button class="btn primary" id="btnNextCommand">Next →</button>
         </div>
